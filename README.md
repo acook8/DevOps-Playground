@@ -1,0 +1,2 @@
+# DevOps-Playground
+This is a repository that will hold a simple web app with a React Frontend and a Dotnet Core backend. This is meant to get familiar with React and Dotnet Core, as well as experiment with different technologies like secret management, feature flags, and container orchestration.

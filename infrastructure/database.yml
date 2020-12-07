@@ -1,0 +1,21 @@
+---
+- hosts: dev:&database
+  become: yes
+  vars_files:
+    - vars/database_vars.yml
+  roles:
+    - role: geerlingguy.mysql
+  tasks:
+  - name: disable selinux
+    ansible.posix.selinux:
+      state: disabled
+    register: selinux
+  - name: open up port 3306
+    ansible.posix.firewalld:
+      # port: 3306/tcp
+      service: mysql
+      permanent: yes
+      state: enabled
+  - name: reboot
+    reboot:
+    when: selinux.changed

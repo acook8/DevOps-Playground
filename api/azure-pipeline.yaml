@@ -1,0 +1,26 @@
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - api/*
+    exclude:
+    - README.md
+    - api/README.md
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: UseDotNet@2
+    displayName: 'Install .Net Core 3.1'
+    inputs:
+      version: '3.1.x'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build'
+    inputs:
+      command: build
+      arguments: '/warnaserror'
+      workingDirectory: 'api/Users'
