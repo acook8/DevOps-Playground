@@ -1,5 +1,5 @@
 ---
-- hosts: dev:&database
+- hosts: database
   become: yes
   vars_files:
     - vars/database_vars.yml
@@ -12,7 +12,6 @@
     register: selinux
   - name: open up port 3306
     ansible.posix.firewalld:
-      # port: 3306/tcp
       service: mysql
       permanent: yes
       state: enabled
