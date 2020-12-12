@@ -32,7 +32,7 @@ namespace Users
         public async Task<List<User>> LatestUserAsync()
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"SELECT `UserId`, `FirstName`, `LastName`, `Age`, `StreetAddress` FROM `Users` ORDER BY `UserId` DESC LIMIT 10;";
+            cmd.CommandText = @"SELECT `UserId`, `FirstName`, `LastName`, `Age`, `StreetAddress` FROM `Users` ORDER BY `UserId`;";
             return await ReadAllAsync(await cmd.ExecuteReaderAsync());
         }
 
