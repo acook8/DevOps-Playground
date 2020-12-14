@@ -1,0 +1,22 @@
+---
+- hosts: database
+  become: yes
+  tasks:
+    # - name: install caddy debian
+    #   shell: |
+    #     echo "deb [trusted=yes] https://apt.fury.io/caddy/ /" \
+    #     tee -a /etc/apt/sources.list.d/caddy-fury.list
+    #     apt update
+    #     apt install caddy
+    #   when: ansible_facts['os_family'] == "Debian"
+    - name: install caddy red hat
+      shell: |
+        dnf install 'dnf-command(copr)'
+        dnf copr enable @caddy/caddy
+        dnf install caddy
+      when: ansible_facts['os_family'] == "RedHat"
+    # - name: enable caddy
+    - name: set caddy environment variable
+    - name: copy caddyfile
+    - name: configure directories
+    - name: reload caddy
