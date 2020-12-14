@@ -1,13 +1,12 @@
 trigger:
   branches:
     include:
-    - main
+    - master
   paths:
     include:
-    - api/*
+    - api/Users/*
     exclude:
     - README.md
-    - api/README.md
 
 pool:
   vmImage: 'ubuntu-latest'
