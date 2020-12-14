@@ -1,0 +1,6 @@
+# dev.playground.alexcook.dev
+{$CADDY_SITE_ADDRESS}
+
+root * /var/www
+reverse_proxy /api/* 127.0.0.1:9005
+file_server
