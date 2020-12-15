@@ -2,21 +2,32 @@
 - hosts: database
   become: yes
   tasks:
-    # - name: install caddy debian
-    #   shell: |
-    #     echo "deb [trusted=yes] https://apt.fury.io/caddy/ /" \
-    #     tee -a /etc/apt/sources.list.d/caddy-fury.list
-    #     apt update
-    #     apt install caddy
-    #   when: ansible_facts['os_family'] == "Debian"
     - name: install caddy red hat
       shell: |
         dnf install 'dnf-command(copr)'
         dnf copr enable @caddy/caddy
         dnf install caddy
       when: ansible_facts['os_family'] == "RedHat"
-    # - name: enable caddy
+    - name: enable caddy
     - name: set caddy environment variable
     - name: copy caddyfile
+      notify: reload caddy
     - name: configure directories
     - name: reload caddy
+    - name: install dotnet core sdk
+    - name: copy users-api.service file
+      copy:
+        dest: /etc/systemd/system/users-api.service 
+        src: ../webserver/users-api.service 
+      notify: restart service
+    - name: start service
+
+  handlers:
+    - name: reload caddy
+      service:
+        name: caddy
+        state: reloaded
+    - name: reload api-user service
+      service: 
+        name: users-api.service
+        state: restarted
