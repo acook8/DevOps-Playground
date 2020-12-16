@@ -30,6 +30,10 @@ steps:
   displayName: 'npm install and build'
   workingDirectory: app/users
 
+- script: ls
+  workingDirectory: $(agent.builddirectory)
+
+
 - task: ArchiveFiles@2
   inputs:
     rootFolderOrFile: '$(agent.builddirectory)/s/build'
