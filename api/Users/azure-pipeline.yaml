@@ -30,7 +30,7 @@ steps:
     inputs:
       command: publish
       publishWebProjects: True
-      arguments: '--output ${Build.ArtifactStagingDirectory}'
+      arguments: '--output $(Build.ArtifactStagingDirectory)'
       zipAfterPublish: True
       workingDirectory: 'api/Users'
 
