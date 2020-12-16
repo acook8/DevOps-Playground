@@ -30,13 +30,9 @@ steps:
   displayName: 'npm install and build'
   workingDirectory: app/users
 
-- script: ls
-  workingDirectory: $(agent.builddirectory)/s
-
-
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(agent.builddirectory)/s/build'
+    rootFolderOrFile: '$(agent.builddirectory)/s/app/users/build'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/UsersApp.zip'
