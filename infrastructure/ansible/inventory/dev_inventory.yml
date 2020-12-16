@@ -8,3 +8,6 @@ all:
       hosts:
         dev-web:
           ansible_host: 192.168.0.40
+      vars: 
+        site_address: dev.playground.alexcook.dev
+        aspnetcore_environment: Development
