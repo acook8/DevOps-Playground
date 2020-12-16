@@ -17,7 +17,7 @@
         state: latest
     - name: enable caddy repo
       shell: 
-        cmd: dnf copr enable @caddy/caddy
+        cmd: dnf copr enable @caddy/caddy -y
     - name: install caddy
       dnf:
           name: caddy
