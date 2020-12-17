@@ -7,36 +7,51 @@ trigger:
   branches:
     include:
     - master
+    - feature/build_pipelines
   paths:
     include:
     - app/users/*
     exclude:
     - README.md
     - app/README.md
+stages:
+- stage: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+  jobs:
+  - job: build
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '10.x'
+      displayName: 'Install Node.js'
 
-pool:
-  vmImage: 'ubuntu-latest'
+    - script: |
+        npm install
+        npm run build
+      displayName: 'npm install and build'
+      workingDirectory: app/users
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(agent.builddirectory)/s/app/users/build'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
-  workingDirectory: app/users
-
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(agent.builddirectory)/s/app/users/build'
-    Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'UsersApp'
-    publishLocation: 'Container'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'UsersApp'
+        publishLocation: 'Container'
+- stage: Deploy
+  jobs:
+  - deployment: UserApp
+    displayName: Deploy UserApp
+    strategy:
+      runOnce:
+        deploy:
+          pool: Dev
+          steps:
+          - script: pwd
+          - script: ls
+          - script: cp -r $(Pipeline.Workspace)/* /var/www/userApp 
