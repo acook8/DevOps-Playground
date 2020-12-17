@@ -47,7 +47,10 @@ stages:
   jobs:
   - deployment: UserApp
     displayName: Deploy UserApp
-    environment: Dev.dev-web.localdomain
+    environment:
+      name: Dev
+      resourceType: VirtualMachine
+      tags: web
     strategy:
       runOnce:
         deploy:
