@@ -47,6 +47,7 @@ stages:
   jobs:
   - deployment: UserApp
     displayName: Deploy UserApp
+    environment: Dev
     strategy:
       runOnce:
         deploy:
