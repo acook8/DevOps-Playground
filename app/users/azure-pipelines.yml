@@ -51,7 +51,6 @@ stages:
     strategy:
       runOnce:
         deploy:
-          pool: Dev
           steps:
           - script: pwd
           - script: ls
