@@ -23,3 +23,19 @@ steps:
       command: build
       arguments: '/warnaserror'
       workingDirectory: 'api/Users'
+  
+  - task: DotNetCoreCLI@2
+    displayName: Dotnet Publish
+    inputs:
+      command: publish
+      publishWebProjects: True
+      arguments: '--output $(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: True
+      workingDirectory: 'api/Users'
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Artifact
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'UsersAPI'
+      publishLocation: 'Container'
