@@ -47,7 +47,7 @@ stages:
   jobs:
   - deployment: UserApp
     displayName: Deploy UserApp
-    environment: Dev
+    environment: Dev.dev-web.localdomain
     strategy:
       runOnce:
         deploy:
