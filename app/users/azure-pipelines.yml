@@ -54,7 +54,7 @@ stages:
           steps:
           - task: CopyFiles@2
             inputs:
-              sourceFolder: $(Pipeline.Workspace)/UserApp
+              sourceFolder: $(Pipeline.Workspace)/UsersApp
               contents: '**' 
               targetFolder: /var/www/userApp
               cleanTargetFolder: true
