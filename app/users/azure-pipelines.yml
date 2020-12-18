@@ -43,18 +43,21 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'UsersApp'
         publishLocation: 'Container'
-- stage: Deploy
+- stage: deploy
   jobs:
-  - deployment: UserApp
-    displayName: Deploy UserApp
+  - deployment: DeployWeb
+    displayName: deploy Web App
+    pool:
+      vmImage: 'Ubuntu-latest'
     environment:
-      name: Dev
+      name:  Dev
       resourceType: VirtualMachine
       tags: web
     strategy:
       runOnce:
         deploy:
           steps:
+          - script: echo Hello world
           - script: pwd
           - script: ls
           - script: cp -r $(Pipeline.Workspace)/* /var/www/userApp 
