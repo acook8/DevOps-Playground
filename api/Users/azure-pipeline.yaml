@@ -54,6 +54,12 @@ stages:
           - task: ExtractFiles@1
             inputs:
               archiveFilePatterns: '$(Pipeline.Workspace)/UsersAPI/**/*.zip'
-              destinationFolder: '/var/www/userApi'
+              destinationFolder: '$(Pipeline.Workspace)/UsersAPI/UsersAPI'
               cleanDestinationFolder: true
+          - task: CopyFiles@2
+            inputs:
+              sourceFolder: '$(Pipeline.Workspace)/UsersAPI/UsersAPI'
+              contents: '**' 
+              targetFolder: /var/www/userApi
+              cleanTargetFolder: true
           - bash: sudo systemctl start users-api.service
