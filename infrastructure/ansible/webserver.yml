@@ -87,7 +87,7 @@
       template:
         dest: /etc/systemd/system/users-api.service 
         src: ../webserver/users-api.service 
-      notify: restart service
+      notify: reload api-user service
     - name: start service
       service:
         name: users-api.service

@@ -52,7 +52,7 @@ stages:
           steps:
           - task: CopyFiles@2
             inputs:
-              sourceFolder: $(Pipeline.Workspace)/UsersApi
+              sourceFolder: $(Pipeline.Workspace)/UsersAPI
               contents: '**' 
               targetFolder: /var/www/userApi
               cleanTargetFolder: true
