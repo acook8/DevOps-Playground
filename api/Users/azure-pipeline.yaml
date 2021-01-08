@@ -45,7 +45,7 @@ stages:
   jobs:
   - deployment: UserApi
     displayName: Deploy UserApi
-    environment: Dev.dev-web
+    environment: Dev.web-dev
     strategy:
       runOnce:
         deploy:

@@ -28,13 +28,15 @@
         groups:
           - www-data
           - wheel
-    - name: allow deployer to restart service without sudo password
-      lineinfile:
-          path: /etc/sudoers
-          validate: 'visudo -cf %s'
-          state: present
-          regexp: '^deployer' 
-          line: 'deployer ALL=(ALL) NOPASSWD: /bin/systemctl restart users-api.service'
+    - name: sudo-userAPIService file in sudo.d
+      copy:
+        dest: /etc/sudoers.d/userAPIService
+        src: ../webserver/sudo-userAPIService
+        backup: yes
+        owner: root
+        group: root
+        mode: 0440
+        validate: /usr/sbin/visudo -cf %s
     - name: install 'dnf-command(copr)'
       dnf:
         name: 'dnf-command(copr)'
