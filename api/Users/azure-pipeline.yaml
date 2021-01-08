@@ -52,6 +52,12 @@ stages:
           steps:
           - task: ExtractFiles@1
             inputs:
-              archiveFilePatterns: '**/*.zip'
+              archiveFilePatterns: '$(Pipeline.Workspace)/UsersAPI/**/*.zip'
               destinationFolder: '/var/www/userApi'
               cleanDestinationFolder: true
+          # - task: CopyFiles@2
+          #   inputs:
+          #     sourceFolder: $(Pipeline.Workspace)/UsersAPI
+          #     contents: '**' 
+          #     targetFolder: /var/www/userApi
+          #     cleanTargetFolder: true
