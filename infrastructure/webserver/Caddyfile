@@ -1,4 +1,4 @@
-:80
+{{site_address}}:3030
 
 root * /var/www/userApp
 reverse_proxy /api/* 127.0.0.1:5000
