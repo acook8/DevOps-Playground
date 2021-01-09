@@ -1,16 +1,42 @@
 ---
 - hosts: web
   become: yes
+  vars_files:
+    - vars/webserver_vars.yml
   tasks:
     - name: disable selinux
       ansible.posix.selinux:
         state: disabled
       notify: reboot
-    # - name: enable caddy repository
-    #   shell: |
-    #     dnf install 'dnf-command(copr)'
-    #     dnf copr enable @caddy/caddy
-    #   when: ansible_facts['os_family'] == "RedHat"
+    - name: create www-data group
+      group:
+          name: www-data
+          state: present 
+          system: yes 
+    - name: create www-data user
+      user:
+        name: www-data
+        state: present
+        group: www-data
+        system: yes
+    - name: create deployer user
+      user:
+        name: deployer
+        system: yes
+        state: present
+        password: "$6$aM0cPxlyQNA$qCxk8WCDn/E5n.SNLeXipFCFkgje.TvJHhk2Cu7XpHRSBK0dzAlfHTbX0YrByYvlIDL5SInIW5HFvK1tFMZuX/"
+        groups:
+          - www-data
+          - wheel
+    - name: sudo-userAPIService file in sudo.d
+      copy:
+        dest: /etc/sudoers.d/userAPIService
+        src: ../webserver/sudo-userAPIService
+        backup: yes
+        owner: root
+        group: root
+        mode: 0440
+        validate: /usr/sbin/visudo -cf %s
     - name: install 'dnf-command(copr)'
       dnf:
         name: 'dnf-command(copr)'
@@ -18,11 +44,13 @@
     - name: enable caddy repo
       shell: 
         cmd: dnf copr enable @caddy/caddy -y
+        warn: no
+        creates: /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:group_caddy:caddy.repo
     - name: install caddy
       dnf:
-          name: caddy
-          enablerepo: '@caddy/caddy'
-          state: latest 
+        name: caddy
+        enablerepo: '@caddy/caddy'
+        state: latest 
     - name: enable caddy
       service:
         name: caddy
@@ -33,28 +61,40 @@
         dest: /etc/caddy/Caddyfile
         src: ../webserver/Caddyfile
       notify: reload caddy
+    - name: permit http
+      ansible.posix.firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+      notify: restart firewalld
     - name: configure User App Directory
       file:
         path: /var/www/userApp
         state: directory
+        owner: www-data
+        group: www-data
+        mode: u=rwx,g=rwx,o=rx
     - name: configure User API Directory
       file:
         path: /var/www/userApi
         state: directory
+        owner: www-data
+        group: www-data
+        mode: u=rwx,g=rwx,o=rx
     - name: install dotnet core sdk
       dnf:
         name: dotnet-sdk-3.1
         state: latest
-    # - name: copy users-api.service file
-    #   template:
-    #     dest: /etc/systemd/system/users-api.service 
-    #     src: ../webserver/users-api.service 
-    #   notify: restart service
-    # - name: start service
-    #   service:
-    #     name: users-api.service
-    #     state: started
-    #     enabled: yes
+    - name: copy users-api.service file
+      template:
+        dest: /etc/systemd/system/users-api.service 
+        src: ../webserver/users-api.service 
+      notify: reload api-user service
+    - name: start service
+      service:
+        name: users-api.service
+        state: started
+        enabled: yes
 
   handlers:
     - name: reload caddy
@@ -67,3 +107,7 @@
         state: restarted
     - name: reboot
       reboot:
+    - name: restart firewalld
+      service:
+        name: firewalld
+        state: restarted

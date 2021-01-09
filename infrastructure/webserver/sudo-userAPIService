@@ -1,0 +1,3 @@
+deployer ALL=(ALL) NOPASSWD: /bin/systemctl start users-api.service
+deployer ALL=(ALL) NOPASSWD: /bin/systemctl stop users-api.service
+deployer ALL=(ALL) NOPASSWD: /bin/systemctl restart users-api.service

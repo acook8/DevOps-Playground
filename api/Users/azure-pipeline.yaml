@@ -7,34 +7,58 @@ trigger:
     - api/Users/*
     exclude:
     - README.md
+stages:
+- stage: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+  jobs:
+  - job: build
+    steps:
+      - task: UseDotNet@2
+        displayName: 'Install .Net Core 3.1'
+        inputs:
+          version: '3.1.x'
 
-pool:
-  vmImage: 'ubuntu-latest'
+      - task: DotNetCoreCLI@2
+        displayName: 'Build'
+        inputs:
+          command: build
+          arguments: '/warnaserror'
+          workingDirectory: 'api/Users'
+      
+      - task: DotNetCoreCLI@2
+        displayName: Dotnet Publish
+        inputs:
+          command: publish
+          publishWebProjects: True
+          arguments: '--output $(Build.ArtifactStagingDirectory)'
+          workingDirectory: 'api/Users'
 
-steps:
-  - task: UseDotNet@2
-    displayName: 'Install .Net Core 3.1'
-    inputs:
-      version: '3.1.x'
-
-  - task: DotNetCoreCLI@2
-    displayName: 'Build'
-    inputs:
-      command: build
-      arguments: '/warnaserror'
-      workingDirectory: 'api/Users'
-  
-  - task: DotNetCoreCLI@2
-    displayName: Dotnet Publish
-    inputs:
-      command: publish
-      publishWebProjects: True
-      arguments: '--output $(Build.ArtifactStagingDirectory)'
-      workingDirectory: 'api/Users'
-
-  - task: PublishBuildArtifacts@1
-    displayName: Publish Artifact
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'UsersAPI'
-      publishLocation: 'Container'
+      - task: PublishBuildArtifacts@1
+        displayName: Publish Artifact
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'UsersAPI'
+          publishLocation: 'Container'
+- stage: Deploy
+  jobs:
+  - deployment: UserApi
+    displayName: Deploy UserApi
+    environment: Dev.web-dev
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - bash: sudo systemctl stop users-api.service
+          - task: ExtractFiles@1
+            inputs:
+              archiveFilePatterns: '$(Pipeline.Workspace)/UsersAPI/**/*.zip'
+              destinationFolder: '$(Pipeline.Workspace)/UsersAPI/UsersAPI'
+              cleanDestinationFolder: true
+          - task: CopyFiles@2
+            inputs:
+              sourceFolder: '$(Pipeline.Workspace)/UsersAPI/UsersAPI'
+              contents: '**' 
+              targetFolder: /var/www/userApi
+              cleanTargetFolder: true
+          - bash: sudo systemctl start users-api.service

@@ -7,7 +7,6 @@ trigger:
   branches:
     include:
     - master
-    - feature/build_pipelines
   paths:
     include:
     - app/users/*
@@ -47,7 +46,7 @@ stages:
   jobs:
   - deployment: UserApp
     displayName: Deploy UserApp
-    environment: Dev.dev-web
+    environment: Dev.web-dev
     strategy:
       runOnce:
         deploy:

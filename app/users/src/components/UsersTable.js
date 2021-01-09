@@ -9,7 +9,7 @@ function UsersTable() {
     useEffect(async () => {
         const fetchData = async () => {
             const result = await axios(
-                'http://192.168.0.50:5001/api/Users',
+                'https://dev.playground.alexcook.dev/api/Users',
             );
             setData(result.data);
         };
