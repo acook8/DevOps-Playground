@@ -2,7 +2,6 @@ trigger:
   branches:
     include:
     - master
-    - feature/build_pipelines
   paths:
     include:
     - api/Users/*
