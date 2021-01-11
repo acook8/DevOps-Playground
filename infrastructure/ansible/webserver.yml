@@ -11,8 +11,8 @@
     - name: create www-data group
       group:
           name: www-data
-          state: present 
-          system: yes 
+          state: present
+          system: yes
     - name: create www-data user
       user:
         name: www-data
@@ -40,9 +40,9 @@
     - name: install 'dnf-command(copr)'
       dnf:
         name: 'dnf-command(copr)'
-        state: latest
+        state: present
     - name: enable caddy repo
-      shell: 
+      shell:
         cmd: dnf copr enable @caddy/caddy -y
         warn: no
         creates: /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:group_caddy:caddy.repo
@@ -50,7 +50,7 @@
       dnf:
         name: caddy
         enablerepo: '@caddy/caddy'
-        state: latest 
+        state: present
     - name: enable caddy
       service:
         name: caddy
@@ -84,11 +84,11 @@
     - name: install dotnet core sdk
       dnf:
         name: dotnet-sdk-3.1
-        state: latest
+        state: present
     - name: copy users-api.service file
       template:
-        dest: /etc/systemd/system/users-api.service 
-        src: ../webserver/users-api.service 
+        dest: /etc/systemd/system/users-api.service
+        src: ../webserver/users-api.service
       notify: reload api-user service
     - name: start service
       service:
@@ -102,7 +102,7 @@
         name: caddy
         state: reloaded
     - name: reload api-user service
-      service: 
+      service:
         name: users-api.service
         state: restarted
     - name: reboot

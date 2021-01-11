@@ -1,0 +1,39 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - infrastructure/*
+    - pipelines/ansible/*
+stages:
+  - stage: ansible_Dev
+    pool: Default
+    variables:
+    - group: 'Ansible'
+    jobs:
+      - job: install_ansible_requirements
+        steps:
+          - bash: ansible-galaxy install -r infrastructure/ansible/requirements.yml
+      - job: test_ansible_syntax
+        steps:
+          - bash: ansible-playbook infrastructure/ansible/webserver.yml --syntax-check -i inventory/dev_inventory.yml
+          - bash: ansible-playbook infrastructure/ansible/database.yml --syntax-check -i inventory/dev_inventory.yml
+          # - bash: ansible-lint infrastructure/ansible
+      - job: provision_web_server
+        steps:
+          - bash: ansible-playbook infrastructure/ansible/webserver.yml -i infrastructure/ansible/inventory/dev_inventory.yml -e "ansible_become_password=$BECOME_PASS"
+            env:
+              BECOME_PASS: $(become_password)
+        
+      # - job: test_web_server_idempotence
+      # - job: provision_database
+      #   steps:
+      #     - bash: ansible-playbook infrastructure/ansible/database.yml -i infrastructure/ansible/inventory/dev_inventory.yml -e "ansible_become_password=$BECOME_PASS"
+      #       env:
+      #         BECOME_PASS: $(become_password)
+      # - job: test_database_idempotence
+  # - stage: mysql_Dev
+  #   pool: Default
+  #   jobs:
+  #     - job: run_sql_schema

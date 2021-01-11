@@ -9,12 +9,13 @@
   - name: disable selinux
     ansible.posix.selinux:
       state: disabled
-    register: selinux
+    notify: reboot
   - name: open up port 3306
     ansible.posix.firewalld:
       service: mysql
       permanent: yes
       state: enabled
-  - name: reboot
-    reboot:
-    when: selinux.changed
+
+  handlers:
+    - name: reboot
+      reboot:
