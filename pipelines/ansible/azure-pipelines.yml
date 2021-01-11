@@ -14,13 +14,16 @@ stages:
     jobs:
       - job: install_ansible_requirements
         steps:
-          - bash: ansible-galaxy install -r infrastructure/ansible/requirements.yml
+          - bash: ansible-galaxy install role -r infrastructure/ansible/requirements.yml
+          - bash: ansible-galaxy install collection -r infrastructure/ansible/requirements.yml
       - job: test_ansible_syntax
+        dependsOn: install_ansible_requirements
         steps:
           - bash: ansible-playbook infrastructure/ansible/webserver.yml --syntax-check -i inventory/dev_inventory.yml
           - bash: ansible-playbook infrastructure/ansible/database.yml --syntax-check -i inventory/dev_inventory.yml
           # - bash: ansible-lint infrastructure/ansible
       - job: provision_web_server
+        dependsOn: test_ansible_syntax
         steps:
           - bash: ansible-playbook infrastructure/ansible/webserver.yml -i infrastructure/ansible/inventory/dev_inventory.yml -e "ansible_become_password=$BECOME_PASS"
             env:
