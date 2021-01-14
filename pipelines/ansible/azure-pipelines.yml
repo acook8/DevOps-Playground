@@ -29,11 +29,15 @@ stages:
             env:
               BECOME_PASS: $(become_password)
         
-      # - job: provision_database
-      #   steps:
-      #     - bash: ansible-playbook infrastructure/ansible/database.yml -i infrastructure/ansible/inventory/dev_inventory.yml -e "ansible_become_password=$BECOME_PASS"
-      #       env:
-      #         BECOME_PASS: $(become_password)
+      - job: provision_database
+        steps:
+          - task: DownloadSecureFile@1
+            name: ansible-vault
+            inputs:
+                secureFile: 'ansible-vault.txt'
+          - bash: ansible-playbook infrastructure/ansible/database.yml -i infrastructure/ansible/inventory/dev_inventory.yml --vault-password-file $(ansible-vault.secureFilePath) -e "ansible_become_password=$BECOME_PASS"
+            env:
+              BECOME_PASS: $(become_password)
   # - stage: mysql_Dev
   #   pool: Default
   #   jobs:

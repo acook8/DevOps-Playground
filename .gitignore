@@ -29,3 +29,6 @@ app/yarn-error.log*
 # api
 api/Users/obj/
 api/Users/bin/
+
+# infrastructure
+infrastructure/ansible/ansible-vault.txt
