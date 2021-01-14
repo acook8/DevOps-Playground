@@ -21,7 +21,7 @@ stages:
         steps:
           - bash: ansible-playbook infrastructure/ansible/webserver.yml --syntax-check -i inventory/dev_inventory.yml
           - bash: ansible-playbook infrastructure/ansible/database.yml --syntax-check -i inventory/dev_inventory.yml
-          # - bash: ansible-lint infrastructure/ansible
+          - bash: ansible-lint infrastructure/ansible -x 305
       - job: provision_web_server
         dependsOn: test_ansible_syntax
         steps:
@@ -29,13 +29,11 @@ stages:
             env:
               BECOME_PASS: $(become_password)
         
-      # - job: test_web_server_idempotence
       # - job: provision_database
       #   steps:
       #     - bash: ansible-playbook infrastructure/ansible/database.yml -i infrastructure/ansible/inventory/dev_inventory.yml -e "ansible_become_password=$BECOME_PASS"
       #       env:
       #         BECOME_PASS: $(become_password)
-      # - job: test_database_idempotence
   # - stage: mysql_Dev
   #   pool: Default
   #   jobs:
