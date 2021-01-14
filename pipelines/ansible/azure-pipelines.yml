@@ -30,6 +30,7 @@ stages:
               BECOME_PASS: $(become_password)
         
       - job: provision_database
+        dependsOn: test_ansible_syntax
         steps:
           - task: DownloadSecureFile@1
             name: ansible_vault
