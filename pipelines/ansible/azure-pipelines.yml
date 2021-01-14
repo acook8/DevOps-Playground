@@ -32,10 +32,10 @@ stages:
       - job: provision_database
         steps:
           - task: DownloadSecureFile@1
-            name: ansible-vault
+            name: ansible_vault
             inputs:
                 secureFile: 'ansible-vault.txt'
-          - bash: ansible-playbook infrastructure/ansible/database.yml -i infrastructure/ansible/inventory/dev_inventory.yml --vault-password-file $(ansible-vault.secureFilePath) -e "ansible_become_password=$BECOME_PASS"
+          - bash: ansible-playbook infrastructure/ansible/database.yml -i infrastructure/ansible/inventory/dev_inventory.yml --vault-password-file $(ansible_vault.secureFilePath) -e "ansible_become_password=$BECOME_PASS"
             env:
               BECOME_PASS: $(become_password)
   # - stage: mysql_Dev
