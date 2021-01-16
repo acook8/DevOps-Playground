@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: azuredevops user present
+      user:
+        name: azuredevops
+        state: present
+        password: "$6$WTr5..6Wpoqko/94$9NSjdWSHV8ypDFWikAYQhEaARRIVukWyw1ce9AEydh7QqQGXPKqslQ0V6HWseiCOfkbd4BdhS0rsAT8q1QL361"
+        groups:
+          - wheel
+    - name: copy ssh public keys
+      ansible.posix.authorized_key:
+        user: azuredevops
+        state: present
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDmuZ/aFVWqqfn1cPk97YsE1MD0+Nd2nNDXhxMmjUle/rA3TZQA1uZQUd0qameoYxZ05EKDInNfulvT7Mg7k2dJI6zC6MJLzZrwh4xG4at8eOjHPik1Xf3UHoXrImlKGMxXEKbpkCvFtgv0WcY4TcSV/K3O7qWaYX0QBtvpDaC97/uo24DEKxRCaxs45w6CUHCZbZhrrEdrAtzTREhdq7wsxFO7jjPMZyPDj9Bl7PIe4viQboCkauZz6qe027M9FSbKl3Yj+GwF84I2rHs2dy9OzwQZrfdXMSsPKjMXIlk5fJLqUvcPbRvzd1Bbpw+BDNpEoppbzect0hB+fhatZ7OElJlci90JKfGvl0jBN1bDpdu96xh2UXojNvWKZVi5T73+agcWu+AU2qrxL4dqnpYUfhTy+zEsKPULK9SXoDL/Zy3BbgHN+8BN+wxZSkPyScdQHpp66MZHX45lNDKHt2rKZbOGxH26ew4dAROCzpACjDJbfshAQVCdz6oLEUwljMk= azuredevops@docker"

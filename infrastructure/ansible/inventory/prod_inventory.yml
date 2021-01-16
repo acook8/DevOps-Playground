@@ -1,0 +1,13 @@
+all:
+  children:
+    database:
+      hosts:
+        prod-db:
+          ansible_host: 192.168.0.43
+    web:
+      hosts:
+        prod-web:
+          ansible_host: 192.168.0.42
+      vars: 
+        site_address: dev.playground.alexcook.dev
+        aspnetcore_environment: Production
