@@ -4,15 +4,7 @@ import json
 import random
 from faker import Faker
 import userApi_helpers as helper
-# def test_file1_method1():
-# 	x=5
-# 	y=6
-# 	assert x+1 == y,"test failed"
-# 	assert x == y,"test failed"
-# def test_file1_method2():
-# 	x=5
-# 	y=6
-# 	assert x+1 == y,"test failed" 
+ 
 
 baseUrl = "https://dev.playground.alexcook.dev/"
 
@@ -22,7 +14,7 @@ def test_getAllUsers():
     status_code = response.status_code
     assert status_code == 200
 
-def test_createUser():
+def test_createAndDeleteUser():
     
     # Create test data
     fake = Faker()
@@ -43,11 +35,11 @@ def test_createUser():
     url = url + "/" + str(userId)
     response2 = helper.getUsers(url)
     status_code2 = response2.status_code
-    assert status_code == 200
+    assert status_code2 == 200
     result2 = response2.json()
     userIdResult = result2.get('userId')
-    firstnameResult = result2.get('firstname')
-    lastnameResult = result2.get('lastname')
+    firstnameResult = result2.get('firstName')
+    lastnameResult = result2.get('lastName')
     ageResult = result2.get('age')
     addressResult = result2.get('address')
     
@@ -58,21 +50,18 @@ def test_createUser():
     assert address == addressResult
 
 
-    # Cleanup
+    # Delete User
+    responseDelete = helper.deleteUser(url)
+    deleteStatusCode = responseDelete.status_code
+    assert deleteStatusCode == 200
 
-    # Validate Cleanup
+    # Validate Delete
+    responseValidate = helper.getUsers(url)
+    validateStatusCode = responseValidate.status_code
+    assert validateStatusCode == 404
 
-# APIs:
-# get all users
-# get specific user
-# create user
-# update user
-# delete user
-# delete all
-
-# Tests
-# [x] create user
-# [x] get specific user
-# [x] get all users
-# update user
-# delete user
+# def test_updateUser():
+#     create user
+#     update user
+#     validate
+#     delete user
