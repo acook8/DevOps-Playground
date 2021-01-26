@@ -63,3 +63,13 @@ stages:
               targetFolder: /var/www/userApi
               cleanTargetFolder: true
           - bash: sudo systemctl start users-api.service
+- stage: Testing
+  pool:
+    vmImage: 'ubuntu-latest'
+  jobs:
+    - job: IntegrationTests
+      displayName: Integration Tests
+      steps:
+        - bash: pip install pytest
+        - bash: py.test
+          workingDirectory: testing/integrationTests

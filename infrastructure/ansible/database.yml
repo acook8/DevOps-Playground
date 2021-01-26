@@ -15,6 +15,12 @@
       service: mysql
       permanent: yes
       state: enabled
+  - name: define schema
+    ansible.community.mysql.mysql_query:
+    login_user:
+    login_password:
+    login_db: users
+    query:
 
   handlers:
     - name: reboot
