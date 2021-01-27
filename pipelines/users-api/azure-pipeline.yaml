@@ -63,13 +63,13 @@ stages:
               targetFolder: /var/www/userApi
               cleanTargetFolder: true
           - bash: sudo systemctl start users-api.service
-- stage: Testing
+- stage: Integration Testing
   pool:
     vmImage: 'ubuntu-latest'
   jobs:
-    - job: IntegrationTests
+    - job: UserAPI
       displayName: Integration Tests
       steps:
-        - bash: pip install pytest
-        - bash: py.test
-          workingDirectory: testing/integrationTests
+        - bash: python -m pip install --upgrade pip setuptools wheel
+        - bash: pip install pytest Faker pytest-cov
+        - bash: pytest testing/integrationTests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html

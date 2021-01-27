@@ -32,3 +32,11 @@ api/Users/bin/
 
 # infrastructure
 infrastructure/ansible/ansible-vault.txt
+
+# tests
+testing/integrationTests/.coverage
+testing/integrationTests/__pycache__
+testing/integrationTests/.pytest_cache
+testing/integrationTests/htmlcov
+testing/integrationTests/junit
+testing/integrationTests/coverage.xml
