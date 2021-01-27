@@ -63,7 +63,7 @@ stages:
               targetFolder: /var/www/userApi
               cleanTargetFolder: true
           - bash: sudo systemctl start users-api.service
-- stage: Integration Testing
+- stage: IntegrationTesting
   pool:
     vmImage: 'ubuntu-latest'
   jobs:
