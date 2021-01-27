@@ -74,7 +74,11 @@ stages:
         - bash: pip install pytest Faker pytest-cov requests
         - bash: python -m pytest testing/integrationTests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
         - task: PublishTestResults@2
+          condition: succeededOrFailed()
           inputs:
-            testResultsFormat: 'JUnit'
-            testResultsFiles: 'testing/integrationTests/junit/test-results.xml'
-            failTaskOnFailedTests: true
+            testResultsFiles: '**/test-*.xml'
+        - task: PublishCodeCoverageResults@1
+          inputs:
+            codeCoverageTool: Cobertura
+            summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
+            reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
