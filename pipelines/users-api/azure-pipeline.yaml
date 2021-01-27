@@ -71,5 +71,5 @@ stages:
       displayName: Integration Tests
       steps:
         - bash: python -m pip install --upgrade pip setuptools wheel
-        - bash: pip install pytest Faker pytest-cov
+        - bash: pip install pytest Faker pytest-cov requests
         - bash: python -m pytest testing/integrationTests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
