@@ -90,8 +90,8 @@ stages:
       displayName: Users Selenium Tests Chrome
       steps:
         - bash: python -m pip install --upgrade pip setuptools wheel
-        - bash: pip install testresources seleniumbase
-        - bash: sbase install chromedriver latest
+        - bash: python -m pip install testresources seleniumbase
+        - bash: python -m sbase install chromedriver latest
         - bash: python -m pytest testing/integrationTests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
           workingDirectory: testing/functionalTests
         - task: PublishTestResults@2
