@@ -82,3 +82,19 @@ stages:
             codeCoverageTool: Cobertura
             summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
             reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
+- stage: FunctionalTesting
+  pool: 
+    vmImage: 'ubuntu-latest'
+  jobs:
+    - job: UsersChrome
+      displayName: Users Selenium Tests Chrome
+      steps:
+        - bash: python -m pip install --upgrade pip setuptools wheel
+        - bash: pip install testresources seleniumbase
+        - bash: sbase install chromedriver latest
+        - bash: python -m pytest testing/integrationTests --doctest-modules --junitxml=junit/test-results.xml --cov=. --cov-report=xml --cov-report=html
+          workingDirectory: testing/functionalTests
+        - task: PublishTestResults@2
+          condition: succeededOrFailed()
+          inputs:
+            testResultsFiles: '**/test-*.xml'
