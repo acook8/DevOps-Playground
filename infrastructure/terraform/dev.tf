@@ -12,6 +12,7 @@ resource "proxmox_vm_qemu" "web-dev" {
   memory   = 2048
   scsihw   = "virtio-scsi-pci"
   bootdisk = "scsi0"
+  agent    = 1
 
   disk {
     size    = "20G"
@@ -55,6 +56,7 @@ resource "proxmox_vm_qemu" "db-dev" {
   memory   = 2048
   scsihw   = "virtio-scsi-pci"
   bootdisk = "scsi0"
+  agent    = 1
 
   disk {
     size    = "20G"
